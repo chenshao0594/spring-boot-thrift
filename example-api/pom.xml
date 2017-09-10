@@ -28,8 +28,8 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.thrift.tools</groupId>
-                <artifactId>maven-thrift-plugin</artifactId>
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>thrift-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

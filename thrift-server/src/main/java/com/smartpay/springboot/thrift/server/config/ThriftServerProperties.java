@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "thrift.server")
 public class ThriftServerProperties {
+	
 	private int port;
 
 	private int minWorker = Runtime.getRuntime().availableProcessors();

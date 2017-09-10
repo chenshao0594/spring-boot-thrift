@@ -41,11 +41,6 @@ public class ThriftRegisterConfiguration {
 		List<String> services = thriftServerProperties.getServicenames();
 		List<String> paths = new LinkedList<String>();
 		for(String each: services){
-			/*int lastComma = each.lastIndexOf(".");
-			String interfaceName = each.substring(0, lastComma);
-			if (!DEFAULT_PACKAGE_PATTERN.matcher(interfaceName).matches()) {
-				throw new ThriftServerException("interface name is not match to package pattern");
-			}*/
 			paths.add(PATH+ each);
 		}
 		register.setPaths(paths);		

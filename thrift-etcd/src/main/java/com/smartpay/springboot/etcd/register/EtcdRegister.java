@@ -13,7 +13,6 @@ public class EtcdRegister {
 	
 	private EtcdClient client;
 	
-	private String path;
 	
 	private String key;
 	
@@ -32,12 +31,6 @@ public class EtcdRegister {
 	}
 	public void setClient(EtcdClient client) {
 		this.client = client;
-	}
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
 	}
 	public String getKey() {
 		return key;
@@ -59,7 +52,7 @@ public class EtcdRegister {
 	}
 	@Override
 	public String toString() {
-		return "EtcdRegister [isStart=" + isStart + ", client=" + client + ", path=" + path + ", key=" + key
+		return "EtcdRegister [isStart=" + isStart + ", client=" + client + ", key=" + key
 				+ ", value=" + value + ", paths=" + paths + "]";
 	}
 	

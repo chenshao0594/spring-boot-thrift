@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.CollectionUtils;
 
 import com.smartpay.springboot.etcd.config.EtcdClientProperties;
 
@@ -21,21 +22,21 @@ import mousio.etcd4j.EtcdClient;
 @EnableConfigurationProperties(EtcdClientProperties.class)
 public class EtcdAutoConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean
-  public EtcdClient etcdClient(EtcdClientProperties etcdClientProperties) {
-    List<URI> uriList = etcdClientProperties.getUris();
-    if (uriList == null || uriList.isEmpty()) {
-      return null;
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	public EtcdClient etcdClient(EtcdClientProperties etcdClientProperties) {
+		List<URI> uriList = etcdClientProperties.getUris();
+		if (CollectionUtils.isEmpty(uriList)) {
+			return null;
+		}
 
-    EtcdClient client = new EtcdClient(uriList.toArray(new URI[uriList.size()]));
-    client.setRetryHandler(new RetryNTimes(etcdClientProperties.getBeforeRetryTime(),
-        etcdClientProperties.getRetryTimes()));
+		EtcdClient client = new EtcdClient(uriList.toArray(new URI[uriList.size()]));
+		client.setRetryHandler(new RetryNTimes(etcdClientProperties.getBeforeRetryTime(),
+				etcdClientProperties.getRetryTimes()));
 
-    if (client.version() == null) {
-    	System.out.println("client version is null--------------------");
-    }
-    return client;
-  }
+		if (client.version() == null) {
+			System.out.println("client version is null--------------------");
+		}
+		return client;
+	}
 }
