@@ -39,7 +39,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import com.dragon.study.springboot.etcd.EtcdAutoConfiguration;
 import com.dragon.study.springboot.thrift.client.annotation.ThriftClient;
 import com.dragon.study.springboot.thrift.client.exception.NoAvailableTransportException;
 import com.dragon.study.springboot.thrift.client.exception.ThriftClientException;
@@ -47,6 +46,7 @@ import com.dragon.study.springboot.thrift.client.route.DirectAlgorithm;
 import com.dragon.study.springboot.thrift.client.route.Node;
 import com.dragon.study.springboot.thrift.client.route.RibbonAlgorithm;
 import com.dragon.study.springboot.thrift.client.route.RouterAlgorithm;
+import com.smartpay.springboot.etcd.EtcdAutoConfiguration;
 
 import mousio.etcd4j.EtcdClient;
 

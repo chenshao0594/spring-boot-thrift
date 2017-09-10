@@ -2,9 +2,8 @@ package com.dragon.study.springboot.thrift.client;
 
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
-import com.dragon.study.springboot.etcd.watcher.EtcdListener;
 import com.netflix.loadbalancer.ServerListUpdater;
+import com.smartpay.springboot.etcd.watcher.EtcdListener;
 
 import java.io.IOException;
 import java.util.Date;

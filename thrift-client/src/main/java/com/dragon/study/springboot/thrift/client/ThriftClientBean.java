@@ -1,11 +1,9 @@
 package com.dragon.study.springboot.thrift.client;
 
 
-import com.dragon.study.springboot.thrift.client.route.RouterAlgorithm;
-
 import java.lang.reflect.Constructor;
 
-import lombok.Data;
+import com.dragon.study.springboot.thrift.client.route.RouterAlgorithm;
 
 public class ThriftClientBean {
 	private RouterAlgorithm router;
