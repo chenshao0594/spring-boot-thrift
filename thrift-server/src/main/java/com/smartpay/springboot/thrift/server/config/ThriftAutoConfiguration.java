@@ -87,7 +87,6 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 					}
 					Constructor<?> constructor = processorClass.getConstructor(clazz);
 					processor = (TProcessor)constructor.newInstance(thriftServiceObj);
-					System.out.println("service name is " + clazz.getEnclosingClass().getName());
 					mprocessor.registerProcessor(clazz.getEnclosingClass().getName(), processor);
 					services.add(clazz.getEnclosingClass().getName());
 					break;					

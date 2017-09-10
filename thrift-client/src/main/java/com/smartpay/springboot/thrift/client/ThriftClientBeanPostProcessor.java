@@ -18,9 +18,13 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.thrift.TApplicationException;
+import org.apache.thrift.async.TAsyncClientManager;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.protocol.TProtocolFactory;
+import org.apache.thrift.transport.TNonblockingSocket;
+import org.apache.thrift.transport.TNonblockingTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.springframework.aop.framework.Advised;
@@ -47,6 +51,7 @@ import com.smartpay.springboot.thrift.client.route.DirectAlgorithm;
 import com.smartpay.springboot.thrift.client.route.Node;
 import com.smartpay.springboot.thrift.client.route.RibbonAlgorithm;
 import com.smartpay.springboot.thrift.client.route.RouterAlgorithm;
+import com.smartpay.springboot.thrift.factory.TMultiplexedProtocolFactory;
 
 import mousio.etcd4j.EtcdClient;
 
@@ -155,14 +160,19 @@ public class ThriftClientBeanPostProcessor implements BeanPostProcessor {
 		} else {
 			router = new DirectAlgorithm(annotation.address());
 		}
-
 		thriftClientBean.setRouter(router);
 		thriftClientBean.setTimeout(annotation.timeout());
 		thriftClientBean.setRetryTimes(annotation.retryTimes());
-
 		try {
-			Constructor<?> clientConstructor = type.getConstructor(TProtocol.class);
-			thriftClientBean.setClientConstructor(clientConstructor);
+			if(type.getCanonicalName().endsWith(".Client")){
+				Constructor<?> clientConstructor = type.getConstructor(TProtocol.class);
+				thriftClientBean.setClientConstructor(clientConstructor);
+			}else if(type.getCanonicalName().endsWith(".AsyncClient")){
+				Constructor<?> clientConstructor = type.getConstructor(TProtocolFactory.class, TAsyncClientManager.class, TNonblockingTransport.class);
+				thriftClientBean.setClientConstructor(clientConstructor);
+				thriftClientBean.setAsync(true);
+			}
+
 		} catch (SecurityException | NoSuchMethodException e) {
 			throw new ThriftClientException(
 					ExceptionUtils.getMessage(e) + ", client class name is " + className);
@@ -186,8 +196,15 @@ public class ThriftClientBeanPostProcessor implements BeanPostProcessor {
 	private ProxyFactory getProxyFactoryForThriftClient(Object bean, Class<?> type, String name) {
 		ProxyFactory proxyFactory;
 		try {
-			proxyFactory = new ProxyFactory(BeanUtils
-					.instantiateClass(type.getConstructor(TProtocol.class), (TProtocol) null));
+			if(type.getCanonicalName().endsWith(".AsyncClient")){
+
+				proxyFactory = new ProxyFactory(BeanUtils
+						.instantiateClass(type.getConstructor(TProtocolFactory.class, TAsyncClientManager.class, TNonblockingTransport.class), (TProtocol) null, (TAsyncClientManager)null, (TProtocol)null));
+
+			}else{
+				proxyFactory = new ProxyFactory(BeanUtils
+						.instantiateClass(type.getConstructor(TProtocol.class), (TProtocol) null));
+			}
 		} catch (NoSuchMethodException e) {
 			throw new InvalidPropertyException(bean.getClass(), name, e.getMessage());
 		}
@@ -213,8 +230,19 @@ public class ThriftClientBeanPostProcessor implements BeanPostProcessor {
 					node.setTimeout(thriftClientBean.getTimeout());
 					transport = pool.borrowObject(node);
 					TProtocol protocol = new TBinaryProtocol(transport, true, true);
-					TMultiplexedProtocol mp = new TMultiplexedProtocol(protocol, realClassName);					
-					Object client = thriftClientBean.getClientConstructor().newInstance(mp);
+					Object client = null;
+					if(thriftClientBean.isAsync()){
+						TTransport transport2 = new TNonblockingSocket(node.getIp(), node.getPort());
+						TAsyncClientManager asyncClientManager = new TAsyncClientManager();  
+						TProtocol protocol2 = new TBinaryProtocol(transport2, true, true);
+						TProtocolFactory protocolFactory = new TMultiplexedProtocolFactory(protocol2, realClassName );					
+						client = thriftClientBean.getClientConstructor().newInstance(protocolFactory, asyncClientManager, transport2);
+
+					}else{
+						TMultiplexedProtocol mp = new TMultiplexedProtocol(protocol, realClassName);
+						client = thriftClientBean.getClientConstructor().newInstance(mp);
+					}
+
 					return ReflectionUtils.invokeMethod(methodInvocation.getMethod(), client, args);
 				} catch (IllegalArgumentException | IllegalAccessException | InstantiationException | SecurityException | NoSuchMethodException e) {
 					throw new ThriftClientException(

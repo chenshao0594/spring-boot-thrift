@@ -4,6 +4,7 @@ import com.dragon.study.springboot.example.api.Calculator;
 import com.dragon.study.springboot.example.api.SharedService;
 import com.smartpay.springboot.thrift.client.annotation.ThriftClient;
 
+import org.apache.thrift.async.AsyncMethodCallback;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +21,23 @@ public class ThriftClientRunner implements CommandLineRunner {
 	SharedService.Client sharedClient;
 	
 	public void run(String... args) throws Exception {
-		System.out.println("hello spring boot");
-		int result = client.add(10, 20);
-		sharedClient.getStruct(25);
-		System.out.println("10 + 20 = " + result);
+		sharedClient.getStruct(89);
+		//client.add(10, 20, new CallbackHandler());		
+		System.out.println(client.add(20, 36));
+	}
+	
+	class CallbackHandler<Integer>  implements AsyncMethodCallback<Integer> {
+		@Override
+		public void onComplete(Integer response) {
+			System.out.println("async response" + response );
+		}
+
+		@Override
+		public void onError(Exception exception) {
+			System.out.println(exception);
+			
+		}
+
+		
 	}
 }

@@ -10,6 +10,7 @@ public class ThriftClientBean {
 	private int timeout;
 	private int retryTimes;
 	private Constructor<?> clientConstructor;
+	private boolean isAsync=false;
 	public RouterAlgorithm getRouter() {
 		return router;
 	}
@@ -34,5 +35,12 @@ public class ThriftClientBean {
 	public void setClientConstructor(Constructor<?> clientConstructor) {
 		this.clientConstructor = clientConstructor;
 	}
+	public boolean isAsync() {
+		return isAsync;
+	}
+	public void setAsync(boolean isAsync) {
+		this.isAsync = isAsync;
+	}
+	
 
 }

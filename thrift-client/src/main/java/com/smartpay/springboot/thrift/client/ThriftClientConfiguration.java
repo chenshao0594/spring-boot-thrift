@@ -25,7 +25,7 @@ public class ThriftClientConfiguration {
   @ConditionalOnMissingBean
   public GenericKeyedObjectPool<Node, TTransport> thriftClientsPool(ThriftClientProperties thriftClientProperties) {
     GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
-    config.setJmxEnabled(false); //cause spring will autodetect itself
+    config.setJmxEnabled(false); 
     config.setMaxTotalPerKey(thriftClientProperties.getPoolMaxTotalPerKey());
     config.setMaxIdlePerKey(thriftClientProperties.getPoolMaxIdlePerKey());
     config.setMinIdlePerKey(thriftClientProperties.getPoolMinIdlePerKey());
