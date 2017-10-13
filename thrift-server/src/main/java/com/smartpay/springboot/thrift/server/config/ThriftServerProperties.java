@@ -2,6 +2,7 @@ package com.smartpay.springboot.thrift.server.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "thrift.server")
@@ -13,11 +14,11 @@ public class ThriftServerProperties {
 
 	private int maxWorker = Runtime.getRuntime().availableProcessors();
 
+	private String serverName;
+	
 	private int workerQueueCapacity = 1024;
 
-	private String serviceName;
-	
-	private List<String> servicenames;
+	private List<String> serviceNames;
 
 	public int getPort() {
 		return port;
@@ -51,22 +52,20 @@ public class ThriftServerProperties {
 		this.workerQueueCapacity = workerQueueCapacity;
 	}
 
-	public String getServiceName() {
-		return serviceName;
+	public String getServerName() {
+		return serverName;
 	}
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
 	}
 
-	public List<String> getServicenames() {
-		return servicenames;
+	public List<String> getServiceNames() {
+		return serviceNames;
 	}
 
-	public void setServicenames(List<String> servicenames) {
-		this.servicenames = servicenames;
+	public void setServiceNames(List<String> serviceNames) {
+		this.serviceNames = serviceNames;
 	}
 	
-	
-
 }

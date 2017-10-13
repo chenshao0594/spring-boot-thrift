@@ -214,6 +214,7 @@ public class ThriftClientBeanPostProcessor implements BeanPostProcessor {
 	@SuppressWarnings("unchecked")
 	private void addPoolAdvice(ProxyFactory proxyFactory, String beanName, String realClassName) {
 		System.out.println("addPoolAdvice's beanName is " + beanName);
+		
 		proxyFactory.addAdvice((MethodInterceptor) methodInvocation -> {
 			Object[] args = methodInvocation.getArguments();
 			ThriftClientBean thriftClientBean = thriftClientMap.get(beanName);

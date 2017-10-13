@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ClassUtils;
 
+import com.smartpay.springboot.thrift.monitor.TServerMonitorHandler;
 import com.smartpay.springboot.thrift.server.annotation.ThriftService;
 import com.smartpay.springboot.thrift.server.exception.ThriftServerException;
 
@@ -98,7 +99,7 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 				throw new Exception("service-class should implements Iface");
 			}
 		}
-		this.thriftServerProperties.setServicenames(services);
+		this.thriftServerProperties.setServiceNames(services);
 		return mprocessor;
 	}
 
@@ -159,7 +160,9 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 			throw new ThriftServerException("args is null");
 		}
 
-		return new THsHaServer(args);
+		TServer server = new THsHaServer(args);
+		server.setServerEventHandler(new TServerMonitorHandler());
+		return server;
 	}
 
 }

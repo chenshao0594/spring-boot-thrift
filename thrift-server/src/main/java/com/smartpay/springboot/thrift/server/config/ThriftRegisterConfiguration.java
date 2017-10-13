@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import com.smartpay.springboot.constants.AppConstants;
 import com.smartpay.springboot.etcd.EtcdAutoConfiguration;
 import com.smartpay.springboot.etcd.register.EtcdRegister;
-import com.smartpay.springboot.thrift.server.exception.ThriftServerException;
 import com.smartpay.springboot.thrift.server.utils.InetAddressUtil;
 
 import mousio.etcd4j.EtcdClient;
@@ -28,7 +28,6 @@ import mousio.etcd4j.EtcdClient;
 @AutoConfigureAfter({ThriftAutoConfiguration.class})
 @EnableConfigurationProperties({ThriftServerProperties.class})
 public class ThriftRegisterConfiguration {
-	private final static String PATH="/dragon/service/";
 
 	private final Pattern DEFAULT_PACKAGE_PATTERN = Pattern.compile("(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*\\.)*\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*");
 
@@ -38,10 +37,10 @@ public class ThriftRegisterConfiguration {
 	public EtcdRegister etcdRegister(EtcdClient etcdClient,
 			ThriftServerProperties thriftServerProperties) {
 		EtcdRegister register = new EtcdRegister();
-		List<String> services = thriftServerProperties.getServicenames();
+		List<String> services = thriftServerProperties.getServiceNames();
 		List<String> paths = new LinkedList<String>();
 		for(String each: services){
-			paths.add(PATH+ each);
+			paths.add(AppConstants.PATH+ each);
 		}
 		register.setPaths(paths);		
 		String ip = InetAddressUtil.getLocalHostLANAddress().getHostAddress();

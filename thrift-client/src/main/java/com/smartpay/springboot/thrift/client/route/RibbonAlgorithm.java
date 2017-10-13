@@ -8,6 +8,7 @@ import com.netflix.loadbalancer.DummyPing;
 import com.netflix.loadbalancer.DynamicServerListLoadBalancer;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAffinityServerListFilter;
+import com.smartpay.springboot.constants.AppConstants;
 import com.smartpay.springboot.thrift.client.EtcdNotificationUpdate;
 import com.smartpay.springboot.thrift.client.ThriftServer;
 import com.smartpay.springboot.thrift.client.ThriftServerList;
@@ -37,7 +38,7 @@ public class RibbonAlgorithm implements RouterAlgorithm {
 		config.setProperty(CommonClientConfigKey.ServerListUpdaterClassName,
 				EtcdNotificationUpdate.class.getName());
 
-		String path = "/dragon/service/" + className;
+		String path = AppConstants.PATH + className;
 		loadBalancer = new DynamicServerListLoadBalancer<>(config, new AvailabilityFilteringRule(),
 				new DummyPing(), new ThriftServerList(etcdClient, className),
 				new ZoneAffinityServerListFilter<>(),

@@ -4,16 +4,15 @@ import java.util.List;
 
 import mousio.etcd4j.EtcdClient;
 
-/**
- * Created by dragon on 16/4/13.
- */
+
 public class EtcdRegister {
 
 	private boolean isStart = false;
 	
 	private EtcdClient client;
 	
-	
+	private String serverName;
+
 	private String key;
 	
 	private String value;
@@ -50,10 +49,18 @@ public class EtcdRegister {
 	public void setPaths(List<String> paths) {
 		this.paths = paths;
 	}
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
 	@Override
 	public String toString() {
-		return "EtcdRegister [isStart=" + isStart + ", client=" + client + ", key=" + key
+		return "EtcdRegister [isStart=" + isStart + ", client=" + client + ", serverName=" + serverName + ", key=" + key
 				+ ", value=" + value + ", paths=" + paths + "]";
 	}
+	
+	
 	
 }

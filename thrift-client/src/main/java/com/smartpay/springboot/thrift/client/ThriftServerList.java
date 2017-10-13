@@ -7,28 +7,22 @@ import java.util.List;
 
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AbstractServerList;
+import com.smartpay.springboot.constants.AppConstants;
 import com.smartpay.springboot.thrift.client.route.Node;
 
 import mousio.etcd4j.EtcdClient;
 import mousio.etcd4j.responses.EtcdKeysResponse;
 
-/**
- * Created by dragon on 16/6/8.
- */
 public class ThriftServerList extends AbstractServerList<ThriftServer> {
 
-	private final EtcdClient etcd;
+	private final EtcdClient etcdClient;
 	private String serviceId;
 
 	public ThriftServerList(EtcdClient etcd, String serviceId) {
-		this.etcd = etcd;
+		this.etcdClient = etcd;
 		this.serviceId = serviceId;
 	}
 
-	@Override
-	public void initWithNiwsConfig(IClientConfig iClientConfig) {
-		this.serviceId = iClientConfig.getClientName();
-	}
 
 	@Override
 	public List<ThriftServer> getInitialListOfServers() {
@@ -41,11 +35,11 @@ public class ThriftServerList extends AbstractServerList<ThriftServer> {
 	}
 
 	private List<ThriftServer> getServers() {
-		if (etcd == null) {
+		if (etcdClient == null) {
 			return Collections.emptyList();
 		}
 		try {
-			EtcdKeysResponse response = etcd.getDir("/dragon/service/" + serviceId).send().get();
+			EtcdKeysResponse response = etcdClient.getDir(AppConstants.PATH + serviceId).send().get();
 			if (response.node.nodes == null || response.node.nodes.isEmpty()) {
 				return Collections.emptyList();
 			}
@@ -82,6 +76,11 @@ public class ThriftServerList extends AbstractServerList<ThriftServer> {
 		int lastSlash = key.lastIndexOf("/");
 		String lastPah = key.substring(0, lastSlash);
 		return extractLastPath(lastPah);
+	}
+
+	@Override
+	public void initWithNiwsConfig(IClientConfig iClientConfig) {
+		this.serviceId = iClientConfig.getClientName();
 	}
 
 }

@@ -6,6 +6,12 @@ import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.transport.TTransport;
 
 public class TMultiplexedProtocolFactory  implements TProtocolFactory{
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2111810311940505865L;
 	private TProtocol  protocol;
 	private String serviceName;
 	public TMultiplexedProtocolFactory(TProtocol  protocol, String serviceName){
