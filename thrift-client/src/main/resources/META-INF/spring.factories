@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.smartpay.springboot.thrift.client.ThriftClientBeanPostProcessor
+com.smartpay.thrift.client.ThriftClientBeanPostProcessor

@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.smartpay.springboot.etcd.EtcdAutoConfiguration,\
-com.smartpay.springboot.etcd.register.EtcdRegisterConfiguration
+com.smartpay.etcd.EtcdAutoConfiguration,\
+com.smartpay.etcd.register.EtcdRegisterConfiguration

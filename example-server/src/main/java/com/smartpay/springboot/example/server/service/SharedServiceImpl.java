@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.dragon.study.springboot.example.api.SharedService;
 import com.dragon.study.springboot.example.api.SharedStruct;
-import com.smartpay.springboot.thrift.server.annotation.ThriftService;
+import com.smartpay.thrift.server.annotation.ThriftService;
 
 @Component
 @ThriftService

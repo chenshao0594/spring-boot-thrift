@@ -5,7 +5,7 @@ import com.dragon.study.springboot.example.api.Calculator;
 import com.dragon.study.springboot.example.api.InvalidOperation;
 import com.dragon.study.springboot.example.api.SharedStruct;
 import com.dragon.study.springboot.example.api.Work;
-import com.smartpay.springboot.thrift.server.annotation.ThriftService;
+import com.smartpay.thrift.server.annotation.ThriftService;
 
 import org.springframework.stereotype.Component;
 
