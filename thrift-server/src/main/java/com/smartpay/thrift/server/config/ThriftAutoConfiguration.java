@@ -1,6 +1,5 @@
 package com.smartpay.thrift.server.config;
 
-
 import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +33,7 @@ import com.smartpay.thrift.server.annotation.ThriftService;
 import com.smartpay.thrift.server.exception.ThriftServerException;
 
 @Configuration
-@EnableConfigurationProperties({ThriftServerProperties.class})
+@EnableConfigurationProperties({ ThriftServerProperties.class })
 public class ThriftAutoConfiguration implements ApplicationContextAware {
 
 	@Autowired
@@ -65,33 +64,32 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 		return nonblockingServerTransport;
 	}
 
-	private TProcessor thriftProcessor()
-			throws Exception {
+	private TProcessor thriftProcessor() throws Exception {
 		TMultiplexedProcessor mprocessor = new TMultiplexedProcessor();
 		String[] beanNames = applicationContext.getBeanNamesForAnnotation(ThriftService.class);
-		List<String>  services = new LinkedList<String>();
-		if(beanNames==null || beanNames.length==0 ){
+		List<String> services = new LinkedList<String>();
+		if (beanNames == null || beanNames.length == 0) {
 			return mprocessor;
 		}
 		TProcessor processor = null;
-		for(String thriftBeanName : beanNames){
+		for (String thriftBeanName : beanNames) {
 			Object thriftServiceObj = this.applicationContext.getBean(thriftBeanName);
 			Class<?>[] interfaces = ClassUtils.getAllInterfaces(thriftServiceObj);
-			for(Class<?> clazz : interfaces){
+			for (Class<?> clazz : interfaces) {
 				String serviceName = clazz.getEnclosingClass().getName();
-				String processorName = serviceName +"$Processor";
-				try{
+				String processorName = serviceName + "$Processor";
+				try {
 					ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-					Class<?> processorClass=classLoader.loadClass(processorName);
-					if(!TProcessor.class.isAssignableFrom(processorClass)){
-						continue;						
+					Class<?> processorClass = classLoader.loadClass(processorName);
+					if (!TProcessor.class.isAssignableFrom(processorClass)) {
+						continue;
 					}
 					Constructor<?> constructor = processorClass.getConstructor(clazz);
-					processor = (TProcessor)constructor.newInstance(thriftServiceObj);
+					processor = (TProcessor) constructor.newInstance(thriftServiceObj);
 					mprocessor.registerProcessor(clazz.getEnclosingClass().getName(), processor);
 					services.add(clazz.getEnclosingClass().getName());
-					break;					
-				}catch(Exception e){
+					break;
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -102,7 +100,6 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 		this.thriftServerProperties.setServiceNames(services);
 		return mprocessor;
 	}
-
 
 	private THsHaServer.Args thriftHsHaServerArgs() {
 		THsHaServer.Args args;
@@ -127,24 +124,21 @@ public class ThriftAutoConfiguration implements ApplicationContextAware {
 
 		args.executorService(createInvokerPool(thriftServerProperties.getMinWorker(),
 				thriftServerProperties.getMaxWorker(), thriftServerProperties.getWorkerQueueCapacity()));
-
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) args.getExecutorService();
 		executor.getQueue();
 		return args;
 	}
 
-	private ExecutorService createInvokerPool(int minWorkerThreads, int maxWorkerThreads,
-			int workerQueueCapacity) {
+	private ExecutorService createInvokerPool(int minWorkerThreads, int maxWorkerThreads, int workerQueueCapacity) {
 		int stopTimeoutVal = 60;
 		TimeUnit stopTimeoutUnit = TimeUnit.SECONDS;
 
 		LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<>(workerQueueCapacity);
-		ExecutorService invoker = new ThreadPoolExecutor(minWorkerThreads, maxWorkerThreads,
-				stopTimeoutVal, stopTimeoutUnit, queue);
+		ExecutorService invoker = new ThreadPoolExecutor(minWorkerThreads, maxWorkerThreads, stopTimeoutVal,
+				stopTimeoutUnit, queue);
 
 		return invoker;
 	}
-
 
 	@Bean
 	@ConditionalOnMissingBean

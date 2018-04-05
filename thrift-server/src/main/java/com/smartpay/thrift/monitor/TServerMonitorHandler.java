@@ -4,33 +4,32 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.server.ServerContext;
 import org.apache.thrift.server.TServerEventHandler;
 import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class TServerMonitorHandler implements TServerEventHandler{
+public class TServerMonitorHandler implements TServerEventHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TServerMonitorHandler.class);
 
 	@Override
 	public void preServe() {
-		// TODO Auto-generated method stub
-		System.out.println("preServer ....");
-		
+		LOGGER.info("preServer ..... ");
 	}
 
 	@Override
 	public ServerContext createContext(TProtocol input, TProtocol output) {
-		System.out.println("createContext ....");
+
+		LOGGER.info("createContext  ..... ");
 		return null;
 	}
 
 	@Override
 	public void deleteContext(ServerContext serverContext, TProtocol input, TProtocol output) {
-		System.out.println("delete Context ....");		
+		LOGGER.info("deleteContext  ..... ");
 	}
 
 	@Override
 	public void processContext(ServerContext serverContext, TTransport inputTransport, TTransport outputTransport) {
-		// TODO Auto-generated method stub
-		
-		System.out.println("process Context ....");
-		
+		LOGGER.info("processContext  ..... ");
 	}
 
 }

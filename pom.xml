@@ -11,6 +11,7 @@
 		<module>thrift-server</module>
 		<module>thrift-client</module>
 		<module>thrift-etcd</module>
+		<module>thrift-ext</module>
 		<module>example-server</module>
 		<module>example-client</module>
 		<module>example-api</module>

@@ -1,7 +1,6 @@
 package com.smartpay.example.controller;
 
-import javax.annotation.PostConstruct;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,10 +21,10 @@ public class ClientController {
 	@ThriftClient
 	SharedService.Client sharedClient;
 
-	@PostConstruct
-	public void run() throws Exception {
+	@GetMapping("test")
+	public long run() throws Exception {
 		sharedClient.getStruct(89);
-		System.out.println("Thrift Client Test Service result is " + client.add(20, 36));
+		return client.add(20, 36);
 	}
 
 }
